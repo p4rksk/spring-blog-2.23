@@ -1,6 +1,7 @@
 package shop.mtcoding.blog.user;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Repository;
@@ -34,7 +35,11 @@ public class UserRepository {
         query.setParameter(1, requestDTO.getUsername());
         query.setParameter(2, requestDTO.getPassword());
 
-        User user = (User) query.getSingleResult();
-        return user;
+        try {
+            User user = (User) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            throw new RuntimeException("아이디 혹은 비밀번호를 찾을 수 없습니다");
+        }
     }
 }
