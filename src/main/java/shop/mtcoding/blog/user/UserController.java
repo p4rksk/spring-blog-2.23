@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import shop.mtcoding.blog._core.util.ApiUtil;
 import shop.mtcoding.blog._core.util.Script;
 
 
@@ -18,6 +19,16 @@ public class UserController {
     // 자바는 final 변수는 반드시 초기화가 되어야함.
     private final UserRepository userRepository;
     private final HttpSession session;
+
+    @GetMapping("/api/username-same-check")
+    public @ResponseBody ApiUtil<?> usernameSameCheck(String username){
+        User user = userRepository.findByUsername(username);
+        if(user == null){ // 회원가입 해도 된다.
+            return new ApiUtil<>(true);
+        }else{ // 회원가입 하면 안된다.
+            return new ApiUtil<>(false);
+        }
+    }
 
     // 왜 조회인데 post임? 민간함 정보는 body로 보낸다.
     // 로그인만 예외로 select인데 post 사용
